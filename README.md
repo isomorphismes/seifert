@@ -34,8 +34,14 @@ The design follows
 [isomorphismes/spinor](https://github.com/isomorphismes/spinor):
 
 - `types/Seifert.idric`: Idriç semantic/type sketch, not compiled;
-- `native/seifert.[ch]`: checked host-tested independent 3D rotations and
-  connected ribbon samples;
+- `icky/seifert.c`: authoritative **functorial ICKY C**; the code reads
+  from typed attachments through named geometry functions to sampled meshes.
+  The supported `←` assignment token is used directly in its source;
+- `native/seifert.h`: small stable C ABI for tests and Android;
+- `tools/normalize_icky_c.py`: the retained historical compatibility adapter;
+  maintained builds now pass source directly to the qualified ICK frontend;
+- `qualification/v02/`: immutable reference source from the already-installed
+  C67 build, compared against ICKY C over 343 three-block states;
 - `android/seifert_view.[ch]`: shared camera projection, large nearest-center
   grab targets, and persistent pointer capture, independently host-tested;
 - `android/seifert_android.c`: NativeActivity/Android pointer lifecycle;
