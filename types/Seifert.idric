@@ -3,7 +3,8 @@ module Seifert
 
 -- Host-only numerical prototype over the inherited binary64 representation.
 -- This is not the native C float ABI or a qualified Float16/Float32 backend.
--- Geometry and rendering remain in native/seifert.[ch].
+-- The semantic ICKY C source is ../icky/seifert.c.
+-- The public boundary is ../native/seifert.h.
 
 public export
 PrototypeScalar : Type

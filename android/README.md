@@ -20,7 +20,9 @@ This is still the architecture inherited from Spinor:
 
 ```text
 types/Seifert.idric       design-only semantic sketch
-native/seifert.[ch]       host-tested C geometry and per-block angles
+icky/seifert.c          authoritative functorial ICKY C mathematical core
+native/seifert.h         stable C ABI from Idriç concepts
+ICK c61e4482             direct compiler for all maintained C
 android/seifert_view.c   camera / touch targets / grab capture
 android/seifert_android.c  NativeActivity input, EGL and saved state
 android/seifert_renderer.c GLES2 drawing
