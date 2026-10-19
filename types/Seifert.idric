@@ -1,0 +1,91 @@
+module Seifert.Types
+
+import Data.Vect
+
+-- Design sketch only, not compiled by current Idriç toolchain.
+-- Executable checks and geometry are in native/seifert.[ch].
+
+public export
+Number : Type
+Number = Double
+
+public export
+record Vec2 where
+  constructor XY
+  x : Number
+  y : Number
+
+public export
+record Vec3 where
+  constructor XYZ
+  x : Number
+  y : Number
+  z : Number
+
+public export
+data BlockId = UpperBlock | CornerBlock | RightBlock
+
+public export
+record Block where
+  constructor RigidBlock
+  center : Vec2
+  halfExtent : Number
+  unwrappedAngle : Number
+
+public export
+record Ribbon where
+  constructor BetweenBlocks
+  from : BlockId
+  to : BlockId
+  halfWidth : Number
+
+public export
+record ThreeBlockScene where
+  constructor Scene
+  upper : Block
+  corner : Block
+  right : Block
+  verticalRibbon : Ribbon
+  horizontalRibbon : Ribbon
+
+-- Positive orthant: corner.x = upper.x, corner.y = right.y,
+-- corner.y < upper.y and corner.x < right.x, cubes disjoint.
+-- Each angle acts through its cube center about the fixed unit
+-- spatial diagonal (1,1,1)/sqrt(3), not about two incompatible axes.
+
+public export
+data TwistCommand = Turn BlockId Number | ResetBlock BlockId
+
+public export
+stepScene : ThreeBlockScene -> TwistCommand -> ThreeBlockScene
+
+public export
+record RibbonVertex where
+  constructor RibbonPoint
+  position : Vec3
+  u : Number
+  side : Nat
+
+public export
+record RibbonMesh where
+  constructor Mesh
+  vertices : List RibbonVertex
+  triangles : List (Nat, Nat, Nat)
+
+public export
+sampleRibbons : ThreeBlockScene -> Nat -> RibbonMesh
+
+-- Pointer capture is owned by the Android adapter and depends on
+-- a single stable selected block and pointer id until release.
+public export
+data GrabTarget = NoGrab | BlockGrab BlockId
+
+public export
+record PointerInteraction where
+  constructor Gesture
+  grab : GrabTarget
+  previousX : Number
+
+-- Not a Seifert-surface proof. These are two ruled, deformable bands
+-- attached to rotating cubical bodies, not an orientable spanning
+-- surface with a verified boundary link.

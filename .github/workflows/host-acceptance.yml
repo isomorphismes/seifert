@@ -1,0 +1,21 @@
+name: Seifert host acceptance
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  geometry:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@11d5960a326750d5838078e36cf38b85af677262
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+      - id: ick
+        uses: ./.github/actions/ick-host
+      - name: Independent twist geometry tests
+        env:
+          ICK: ${{ steps.ick.outputs.compiler }}
+        run: sh native/test-host.sh
