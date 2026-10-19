@@ -103,3 +103,7 @@ as *unavailable*, never as a spurious zero.
 **Unbuilt feature:** [Seifert-fibered 3-manifold exploration #8](https://github.com/isomorphismes/seifert/issues/8). This is separate from the [current Seifert ribbon work #6](https://github.com/isomorphismes/seifert/issues/6) and cross-links [Montesinos orbifold examples](https://github.com/isomorphisms/montesinos/issues/1).
 
 The *Seifert surface* of a knot (the subject of the interactive ribbons) should not be confused with a *Seifert-fibered 3-manifold*. For the latter, see **Peter Scott**, [“The Geometries of 3-Manifolds” (1983)](https://doi.org/10.1112/blms/15.5.401), §§3–5: the theory of Seifert fiber spaces and their place among Thurston's eight geometries. This is a **survey paper**, catalogued in [papers](../papers/README.md), not an extra book.
+
+## Cross-reading for arithmetic workloads
+
+[Arithmetic topology, polynomial invariants, and multiplication benchmarks](arithmetic-examples-for-multiplication.md) gives possible future operand families and backlinks to the ComputerScience and Fulton books shelves. It is a research map, not a benchmark result.
