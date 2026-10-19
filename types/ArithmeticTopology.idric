@@ -1,0 +1,158 @@
+module ArithmeticTopology
+
+import Seifert
+
+-- Semantic Idriç source: intentionally not represented as compiled Android code.
+-- This first slice *defines* pure arithmetic/readout operations over the
+-- existing ThreeBlockScene. The renderer and geometry solver remain separate.
+--
+-- Bibliography: books/README.md, books/books.bib, papers/papers.bib
+-- Current open ribbons do NOT admit a closed-link linking invariant.
+
+public export
+tau : PrototypeScalar
+tau = 6.283185307179586476925286766559
+
+-- Oriented from corner block to outer block (upper / right).
+public export
+data RibbonId = VerticalRibbon | HorizontalRibbon
+
+public export
+outer_block : RibbonId → BlockId
+outer_block VerticalRibbon = UpperBlock
+outer_block HorizontalRibbon = RightBlock
+
+public export
+angle_of : BlockId → ThreeBlockScene → PrototypeScalar
+angle_of UpperBlock scene = unwrapped_angle (upper scene)
+angle_of CornerBlock scene = unwrapped_angle (corner scene)
+angle_of RightBlock scene = unwrapped_angle (right scene)
+
+-- Signed revolutions commanded to the block about its common diagonal.
+-- This is the angle history, not its final SO(3) orientation.
+public export
+commanded_block_turns : BlockId → ThreeBlockScene → PrototypeScalar
+commanded_block_turns block scene = angle_of block scene ÷ tau
+
+-- The relative rotation is a *diagnostic*: outer angle minus corner angle.
+-- The rotation axes are shared spatial diagonals, NOT ribbon tangents.
+-- Calling this quantity actual geometric ribbon twist would be incorrect.
+public export
+relative_endpoint_radians : RibbonId → ThreeBlockScene → PrototypeScalar
+relative_endpoint_radians ribbon scene =
+  angle_of (outer_block ribbon) scene - angle_of CornerBlock scene
+
+public export
+relative_endpoint_turns : RibbonId → ThreeBlockScene → PrototypeScalar
+relative_endpoint_turns ribbon scene =
+  relative_endpoint_radians ribbon scene ÷ tau
+
+-- Fail-closed number transport to a future UI. "Unavailable" is not zero.
+public export
+data Requirement
+  = FiniteCommandedAngles
+  | ContinuousNormalFraming
+  | RegularCenterline
+  | DisjointClosedOrientedBoundaries
+  | CertifiedOrientableSurface
+  | ValidatedSeifertMatrix
+  | ExplicitArithmeticInputs
+
+public export
+data Quantity
+  = BlockTurns BlockId
+  | EndpointTurns RibbonId
+  | GeometricRibbonTwist RibbonId
+  | CenterlineWrithe RibbonId
+  | ClosedLinkLinking
+  | SurfaceGenus
+  | LegendreSymbol
+
+public export
+data NumberReadout
+  = Available Text PrototypeScalar Text
+  | Unavailable Text (List Requirement)
+
+-- Reject NaN, infinity and arithmetic overflow before transporting a number.
+-- For a finite binary64 value, value - value is zero; for infinity it is NaN.
+available_if_finite : Text → PrototypeScalar → Text → NumberReadout
+available_if_finite label value unit =
+  if value ≟ value && (value - value) ≟ 0
+     then Available label value unit
+     else Unavailable label [FiniteCommandedAngles]
+
+public export
+readout : Quantity → ThreeBlockScene → NumberReadout
+readout (BlockTurns block) scene =
+  available_if_finite "block rotation" (commanded_block_turns block scene) "turns"
+readout (EndpointTurns VerticalRibbon) scene =
+  available_if_finite "upper − corner relative rotation"
+            (relative_endpoint_turns VerticalRibbon scene) "turns"
+readout (EndpointTurns HorizontalRibbon) scene =
+  available_if_finite "right − corner relative rotation"
+            (relative_endpoint_turns HorizontalRibbon scene) "turns"
+readout (GeometricRibbonTwist _) _ =
+  Unavailable "geometric ribbon twist"
+              [RegularCenterline, ContinuousNormalFraming]
+readout (CenterlineWrithe _) _ =
+  Unavailable "centerline writhe" [RegularCenterline]
+readout ClosedLinkLinking _ =
+  Unavailable "linking number" [DisjointClosedOrientedBoundaries]
+readout SurfaceGenus _ =
+  Unavailable "spanning-surface genus" [CertifiedOrientableSurface]
+readout LegendreSymbol _ =
+  Unavailable "Legendre symbol" [ExplicitArithmeticInputs]
+
+-- Standalone mathematical functions. These take *already-validated* inputs;
+-- they do not manufacture geometric evidence.
+
+-- For a connected, compact, oriented surface with b >= 1 boundary
+-- components and Euler characteristic chi: 2*g = 2 - b - chi.
+-- This arithmetic check cannot certify that a mesh is such a surface.
+public export
+genus_from_certified_counts : (euler_characteristic : Integer) →
+                           (boundary_components : Integer) →
+                           Maybe Integer
+genus_from_certified_counts chi b =
+  let twice_genus = 2 - b - chi in
+  if b < 1 || twice_genus < 0 || not (mod twice_genus 2 ≟ 0)
+     then Nothing
+     else Just (div twice_genus 2)
+
+-- Signs of mixed crossings from a *correctly oriented diagram of two
+-- distinct closed link components*, counted once per mixed crossing.
+-- The geometry/diagram validator does not exist yet.
+public export
+data CrossingSign = PositiveCrossing | NegativeCrossing
+
+public export
+signed_mixed_crossings : List CrossingSign → Integer
+signed_mixed_crossings [] = 0
+signed_mixed_crossings (PositiveCrossing :: rest) =
+  1 + signed_mixed_crossings rest
+signed_mixed_crossings (NegativeCrossing :: rest) =
+  -1 + signed_mixed_crossings rest
+
+-- The linking number is one-half the mixed-crossing sum. An odd sum
+-- signals invalid/incomplete input, not a half-integer linking invariant.
+public export
+linking_from_given_mixed_crossings : List CrossingSign → Maybe Integer
+linking_from_given_mixed_crossings crossings =
+  let crossing_sum = signed_mixed_crossings crossings in
+  if not (mod crossing_sum 2 ≟ 0) then Nothing else Just (div crossing_sum 2)
+
+-- Călugăreanu–White–Fuller consistency *only* for a regular,
+-- embedded, closed, oriented, framed ribbon with valid numeric inputs:
+-- Lk = Tw + Wr. This does not determine Lk from an open screen ribbon.
+public export
+closed_ribbon_consistency_residual : (linking : PrototypeScalar) →
+                                  (twist : PrototypeScalar) →
+                                  (writhe : PrototypeScalar) → PrototypeScalar
+closed_ribbon_consistency_residual linking twist writhe =
+  linking - (twist + writhe)
+
+-- Future gates: a certified closed link/Seifert surface and validated
+-- transverse framing are REQUIRED before connecting linking, writhe,
+-- Alexander polynomial, Seifert form or Milnor invariants to the UI.
+-- Arithmetic topology analogies (Morishita) also require *arithmetic
+-- inputs*: a knot gesture does not magically determine a Legendre symbol.

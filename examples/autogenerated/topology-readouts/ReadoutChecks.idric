@@ -1,0 +1,73 @@
+module ReadoutChecks
+
+import Seifert
+import ArithmeticTopology
+import System
+
+scene_with_angles : PrototypeScalar → PrototypeScalar → PrototypeScalar → ThreeBlockScene
+scene_with_angles upper_angle corner_angle right_angle =
+  Scene (RigidBlock (XY 0 1) 0.1 upper_angle)
+        (RigidBlock (XY 0 0) 0.1 corner_angle)
+        (RigidBlock (XY 1 0) 0.1 right_angle)
+        (BetweenBlocks CornerBlock UpperBlock 0.05)
+        (BetweenBlocks CornerBlock RightBlock 0.05)
+
+near : PrototypeScalar → PrototypeScalar → Bool
+near actual expected = abs (actual - expected) < 0.000000000001
+
+endpoint_fixture : (PrototypeScalar, PrototypeScalar, PrototypeScalar,
+                    PrototypeScalar, PrototypeScalar) → Bool
+endpoint_fixture (upper_angle, corner_angle, right_angle, vertical, horizontal) =
+  let scene = scene_with_angles upper_angle corner_angle right_angle in
+  near (relative_endpoint_turns VerticalRibbon scene) vertical &&
+  near (relative_endpoint_turns HorizontalRibbon scene) horizontal
+
+is_unavailable : NumberReadout → Bool
+is_unavailable (Unavailable _ _) = True
+is_unavailable _ = False
+
+zero_scene : ThreeBlockScene
+zero_scene = scene_with_angles 0 0 0
+
+checks : List (Text, Bool)
+checks =
+  [ ("six signed endpoint fixtures", all endpoint_fixture
+      [(0,0,0,0,0), (tau,0,0,1,0), (0,tau,0,-1,-1),
+       (0,0,tau,0,1), (tau÷4,-tau÷4,3*tau÷4,0.5,1),
+       (2*tau,tau,-tau,1,-2)])
+  , ("two turns remain two turns", near
+      (commanded_block_turns UpperBlock (scene_with_angles (2*tau) 0 0)) 2)
+  , ("disk", genus_from_certified_counts 1 1 ≟ Just 0)
+  , ("annulus", genus_from_certified_counts 0 2 ≟ Just 0)
+  , ("punctured torus", genus_from_certified_counts (-1) 1 ≟ Just 1)
+  , ("odd genus numerator rejected", genus_from_certified_counts 0 1 ≟ Nothing)
+  , ("negative genus rejected", genus_from_certified_counts 3 1 ≟ Nothing)
+  , ("missing boundary rejected", genus_from_certified_counts 2 0 ≟ Nothing)
+  , ("positive mixed crossings", linking_from_given_mixed_crossings
+      [PositiveCrossing, PositiveCrossing] ≟ Just 1)
+  , ("orientation reversed", linking_from_given_mixed_crossings
+      [NegativeCrossing, NegativeCrossing] ≟ Just (-1))
+  , ("crossings cancel", linking_from_given_mixed_crossings
+      [PositiveCrossing, NegativeCrossing] ≟ Just 0)
+  , ("odd crossings rejected", linking_from_given_mixed_crossings
+      [PositiveCrossing] ≟ Nothing)
+  , ("closed ribbon residual", near (closed_ribbon_consistency_residual 1 0.25 0.75) 0)
+  , ("open geometry has no invented invariants", all
+      (\quantity ⇒ is_unavailable (readout quantity zero_scene))
+      [GeometricRibbonTwist VerticalRibbon, CenterlineWrithe HorizontalRibbon,
+       ClosedLinkLinking, SurfaceGenus, LegendreSymbol])
+  , ("infinity rejected", is_unavailable (readout (BlockTurns UpperBlock)
+      (scene_with_angles (1÷0) 0 0)))
+  , ("NaN rejected", is_unavailable (readout (EndpointTurns VerticalRibbon)
+      (scene_with_angles (0÷0) 0 0)))
+  , ("endpoint overflow rejected", is_unavailable
+      (readout (EndpointTurns VerticalRibbon)
+        (scene_with_angles 1.0e308 (-1.0e308) 0)))
+  ]
+
+main : IO ()
+main = if all snd checks
+  then putStrLn "SEIFERT_IDRIC_HOST_READOUTS PASS: 17 groups; six endpoint fixtures; no Android backend claim"
+  else do
+    printLn (map fst (filter (not . snd) checks))
+    exitFailure

@@ -1,28 +1,27 @@
-module Seifert.Types
+module Seifert
 
-import Data.Vect
 
--- Design sketch only, not compiled by current Idriç toolchain.
+-- Host-only numerical prototype over the inherited binary64 representation.
+-- This is not the native C float ABI or a qualified Float16/Float32 backend.
 -- The semantic ICKY C source is ../icky/seifert.c.
 -- The public boundary is ../native/seifert.h.
--- The ordinary-C NDK preparation is explicit; this file is not executed.
 
 public export
-Number : Type
-Number = Double
+PrototypeScalar : Type
+PrototypeScalar = Double
 
 public export
 record Vec2 where
   constructor XY
-  x : Number
-  y : Number
+  x : PrototypeScalar
+  y : PrototypeScalar
 
 public export
 record Vec3 where
   constructor XYZ
-  x : Number
-  y : Number
-  z : Number
+  x : PrototypeScalar
+  y : PrototypeScalar
+  z : PrototypeScalar
 
 public export
 data BlockId = UpperBlock | CornerBlock | RightBlock
@@ -31,15 +30,15 @@ public export
 record Block where
   constructor RigidBlock
   center : Vec2
-  halfExtent : Number
-  unwrappedAngle : Number
+  half_extent : PrototypeScalar
+  unwrapped_angle : PrototypeScalar
 
 public export
 record Ribbon where
   constructor BetweenBlocks
   from : BlockId
   to : BlockId
-  halfWidth : Number
+  half_width : PrototypeScalar
 
 public export
 record ThreeBlockScene where
@@ -47,8 +46,8 @@ record ThreeBlockScene where
   upper : Block
   corner : Block
   right : Block
-  verticalRibbon : Ribbon
-  horizontalRibbon : Ribbon
+  vertical_ribbon : Ribbon
+  horizontal_ribbon : Ribbon
 
 -- Positive orthant: corner.x = upper.x, corner.y = right.y,
 -- corner.y < upper.y and corner.x < right.x, cubes disjoint.
@@ -56,26 +55,26 @@ record ThreeBlockScene where
 -- spatial diagonal (1,1,1)/sqrt(3), not about two incompatible axes.
 
 public export
-data TwistCommand = Turn BlockId Number | ResetBlock BlockId
+data TwistCommand = Turn BlockId PrototypeScalar | ResetBlock BlockId
 
-public export
-stepScene : ThreeBlockScene -> TwistCommand -> ThreeBlockScene
+-- Future API, deliberately not an undefined executable declaration:
+-- step_scene : ThreeBlockScene → TwistCommand → ThreeBlockScene
 
 public export
 record RibbonVertex where
   constructor RibbonPoint
   position : Vec3
-  u : Number
-  side : Nat
+  u : PrototypeScalar
+  side : Number
 
 public export
 record RibbonMesh where
   constructor Mesh
   vertices : List RibbonVertex
-  triangles : List (Nat, Nat, Nat)
+  triangles : List (Number, Number, Number)
 
-public export
-sampleRibbons : ThreeBlockScene -> Nat -> RibbonMesh
+-- Future API, implemented only in native geometry today:
+-- sample_ribbons : ThreeBlockScene → Number → RibbonMesh
 
 -- Pointer capture is owned by the Android adapter and depends on
 -- a single stable selected block and pointer id until release.
@@ -86,7 +85,7 @@ public export
 record PointerInteraction where
   constructor Gesture
   grab : GrabTarget
-  previousX : Number
+  previous_x : PrototypeScalar
 
 -- Not a Seifert-surface proof. These are two ruled, deformable bands
 -- attached to rotating cubical bodies, not an orientable spanning
