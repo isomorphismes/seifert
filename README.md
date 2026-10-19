@@ -38,8 +38,8 @@ The design follows
   from typed attachments through named geometry functions to sampled meshes.
   The supported `←` assignment token is used directly in its source;
 - `native/seifert.h`: small stable C ABI for tests and Android;
-- `tools/normalize_icky_c.py`: the retained historical compatibility adapter;
-  maintained builds now pass source directly to the qualified ICK frontend;
+- maintained builds pass source directly to the qualified ICK frontend;
+  the obsolete Python compatibility adapter is retired in Git history;
 - `qualification/v02/`: immutable reference source from the already-installed
   C67 build, compared against ICKY C over 343 three-block states;
 - `android/seifert_view.[ch]`: shared camera projection, large nearest-center
