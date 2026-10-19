@@ -3,7 +3,9 @@ module Seifert.Types
 import Data.Vect
 
 -- Design sketch only, not compiled by current Idriç toolchain.
--- Executable checks and geometry are in native/seifert.[ch].
+-- The semantic ICKY C source is ../icky/seifert.c.
+-- The public boundary is ../native/seifert.h.
+-- The ordinary-C NDK preparation is explicit; this file is not executed.
 
 public export
 Number : Type
