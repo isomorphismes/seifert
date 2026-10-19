@@ -1,8 +1,21 @@
 # Native three-block ribbon model
 
-The first executable model is deliberately small and Android-independent.
-`seifert.[ch]` owns 3 cube centers, 3 signed unwrapped angles, 2 ribbon
-meshes, and the geometry that attaches each ribbon to the rotating cube faces.
+The executable model is deliberately small and Android-independent.
+`../icky/seifert.c` is the authoritative, compositional ICKY C translation
+unit. `seifert.h` is the stable C ABI: 3 cube centers, 3 signed unwrapped
+angles, 2 ribbon meshes, and edge geometry attached to rotating cube faces.
+There is **no maintained ordinary-C copy** of the mathematical source.
+
+The source expresses:
+`orthant_connections → attachment_pair → centerline_at →
+sample_ribbon_cross_section → sample_one_ribbon → seifert_sample_ribbons`.
+The mathematical edges of the two cubes, not the GLES renderer, determine
+the ribbon topology and geometry.
+
+Host and Android builds compile the maintained source directly with ICK
+c61e4482. NDK r27c assembles and links Android output. The historical Python
+adapter is no longer a build producer. Exact pins and qualification are in
+[division-migration.md](../docs/division-migration.md).
 
 ## Positive two-dimensional orthant
 

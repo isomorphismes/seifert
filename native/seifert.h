@@ -20,7 +20,7 @@ typedef struct {
 } SeifertVec3;
 
 typedef struct {
-    /* Centers lie on a positive-x, positive-y line, with z = 0. */
+    /* An L in the positive (x,y) orthant: upper, corner, right; z = 0. */
     SeifertVec3 centers[SEIFERT_BLOCK_COUNT];
     float block_half_extent;
     float ribbon_half_width;

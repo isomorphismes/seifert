@@ -1,0 +1,36 @@
+{
+  "failed_stage": "android-producer-gate",
+  "finished_at": "2026-10-08T16:45:23.935829+00:00",
+  "github_sha_declared": null,
+  "parameters": {},
+  "pipeline": "android-apk-preflight",
+  "pipeline_path": "pipelines/android-apk-preflight.json",
+  "pipeline_sha256": "673e3a96ab14ece50737a03b832ecb95b6e92994f8b4b55a5b9de2bc2ac82594",
+  "repository_commit": "9775aa324f523cbc6c758e89461915484a5a0fc7",
+  "runner": {
+    "machine": "x86_64",
+    "python": "3.12.3",
+    "release": "6.18.44",
+    "system": "Linux"
+  },
+  "schema_version": 1,
+  "stages": [
+    {
+      "argv": [
+        "bash",
+        "scripts/android-producer-stage"
+      ],
+      "cwd": ".",
+      "exit_code": 1,
+      "finished_at": "2026-10-08T16:45:23.935762+00:00",
+      "index": 1,
+      "kind": "command",
+      "name": "android-producer-gate",
+      "started_at": "2026-10-08T16:45:10.647830+00:00",
+      "stderr_sha256": "c679aed511082e82b10609df2b821c0a70353c771940305c92ee7b5c1c37e4fd",
+      "stdout_sha256": "c6f77722e59e0e0cc68ffdcb1e2ae1078d51b7d40393251352a7aa5cb48c5656"
+    }
+  ],
+  "started_at": "2026-10-08T16:45:10.647737+00:00",
+  "status": "FAIL"
+}
