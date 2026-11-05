@@ -1,0 +1,32 @@
+name: Shared charcoal contract
+on:
+  pull_request:
+    paths:
+      - android/**
+      - .github/workflows/charcoal-contract.yml
+      - .github/actions/grease/**
+  workflow_dispatch:
+permissions:
+  contents: read
+  actions: read
+jobs:
+  palette:
+    runs-on: ubuntu-24.04
+    env:
+      ASAN_OPTIONS: detect_leaks=0
+    steps:
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
+      - uses: actions/checkout@11bd71901bbe5b1630ceea73d27597364c9af683
+        with:
+          repository: isomorphisms/android-NDK
+          ref: 3e682fb1175beef5625dbd2418730220e49fc9bd
+          path: .charcoal-owner
+          persist-credentials: false
+      - id: grease
+        uses: ./.github/actions/grease
+      - run: sudo sysctl vm.mmap_rnd_bits=28
+      - name: Require byte-identical shared palette resources
+        run: '"${{ steps.grease.outputs.executable }}" android/check-charcoal.grease .charcoal-owner'
