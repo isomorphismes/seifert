@@ -65,6 +65,13 @@ int main(int argc,char **argv)
     const float common_turn[3] = {tau,tau,tau};
     assert(seifert_renderer_set_angles(zero));
     read_display(reference);
+    /* Independent pixel expectations: real readout surface and scene margin. */
+    unsigned char surface_color[4];
+    glReadPixels(0,HEIGHT-1,1,1,GL_RGBA,GL_UNSIGNED_BYTE,surface_color);
+    assert(surface_color[0]==47 && surface_color[1]==47 && surface_color[2]==47);
+    unsigned char margin[4];
+    glReadPixels(0,HEIGHT/2,1,1,GL_RGBA,GL_UNSIGNED_BYTE,margin);
+    assert(margin[0]==33 && margin[1]==33 && margin[2]==33);
     unsigned bright = 0;
     for (size_t pixel=0;pixel<sizeof(reference);pixel+=4) {
         if (reference[pixel]>100 || reference[pixel+1]>100) ++bright;

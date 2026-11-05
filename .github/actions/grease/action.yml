@@ -1,0 +1,18 @@
+name: Verified canonical Grease runtime
+description: Restore the fixed owner engine and canonical portable Grease launcher.
+outputs:
+  executable:
+    description: Absolute path to the verified Grease launcher.
+    value: ${{ github.workspace }}/grease/bin/grease
+runs:
+  using: composite
+  steps:
+    - uses: actions/download-artifact@d3f86a106a0bac45b974a628896c90dbdf5c8093
+      with:
+        repository: dilapidated-shed/grease
+        run-id: 41253994123
+        artifact-ids: 13062637698
+        merge-multiple: true
+        github-token: ${{ github.token }}
+        path: grease
+    - uses: isomorphisms/ai-ci/.github/actions/charcoal-grease@ebfb667b64009f0c0bdf9dcfafb7884196786ef5

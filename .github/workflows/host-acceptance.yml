@@ -20,7 +20,7 @@ jobs:
           ICK: ${{ steps.ick.outputs.compiler }}
         run: sh native/test-host.sh
       - id: grease
-        uses: isomorphismes/mostow/.github/actions/grease@9c4bfd742f774c9b309df3acce049fc1aa930bf3
+        uses: ./.github/actions/grease
       - name: Provision host GLES test inputs
         run: ${{ steps.grease.outputs.executable }} _/provision-host-gl.grease
       - name: Mathematical readouts and real GLES pixel acceptance

@@ -12,7 +12,7 @@ on:
       - "docs/division-migration.md"
       - ".github/workflows/apk-artifacts.yml"
   pull_request:
-    branches: [main, feat/three-block-ribbons, feat/idric-topology-readouts]
+    branches: [main, feat/three-block-ribbons, feat/idric-topology-readouts, feat/live-topology-readouts]
     paths:
       - "android/**"
       - "native/**"
@@ -35,6 +35,8 @@ jobs:
             abi: armeabi-v7a
           - device: miro-c67
             abi: arm64-v8a
+          - device: emulator
+            abi: x86_64
 
     steps:
       - name: Checkout Seifert
@@ -74,7 +76,7 @@ jobs:
           printf 'build-tools=%s/build-tools/35.0.0\n' "$sdk_root" >> "$GITHUB_OUTPUT"
 
       - id: compiler
-        uses: isomorphisms/ai-ci/ick-android@015cc7901ae0b3ad262b476f24e129b53c56db95
+        uses: isomorphisms/ai-ci/ick-android@f6d825d15cd3c0c34ae1b43240a463ff5d343090
         with:
           abi: ${{ matrix.abi }}
           ndk: ${{ steps.android-inputs.outputs.ndk }}

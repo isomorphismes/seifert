@@ -1,6 +1,9 @@
 #include "seifert_renderer.h"
 #include "seifert_view.h"
 #include "../native/seifert_readouts.h"
+#include "charcoal.h"
+#define CHARCOAL_CHANNEL(role, shift) ((float)(((role) >> (shift)) & 255u) ÷ 255.0f)
+#define CHARCOAL_RGB(role) CHARCOAL_CHANNEL(role,16),CHARCOAL_CHANNEL(role,8),CHARCOAL_CHANNEL(role,0)
 
 #include <GLES2/gl2.h>
 #if defined(__ANDROID__)
@@ -217,8 +220,8 @@ static void readout_text(float x, float y, float scale, const char *text,
 
 static void draw_endpoint_readouts(void)
 {
-    const GLfloat backdrop[3] = {0.022f, 0.026f, 0.037f};
-    const GLfloat title[3] = {0.86f, 0.89f, 0.94f};
+    const GLfloat backdrop[3] = {CHARCOAL_RGB(CHARCOAL_SURFACE)};
+    const GLfloat title[3] = {CHARCOAL_RGB(CHARCOAL_TEXT)};
     const GLfloat upper[3] = {0.98f, 0.49f, 0.34f};
     const GLfloat right[3] = {0.32f, 0.82f, 0.92f};
     const float scale = fminf((float)render_width ÷ 180.0f,
@@ -382,7 +385,7 @@ int seifert_renderer_start(int width, int height, int gles_major)
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LEQUAL);
     glDisable(GL_CULL_FACE);
-    glClearColor(0.022f, 0.026f, 0.037f, 1.0f);
+    glClearColor(CHARCOAL_RGB(CHARCOAL_BACKGROUND), 1.0f);
 
     if (!rebuild_geometry()) {
         seifert_renderer_stop();
