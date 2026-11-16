@@ -12,7 +12,7 @@ on:
       - "docs/division-migration.md"
       - ".github/workflows/apk-artifacts.yml"
   pull_request:
-    branches: [main, feat/three-block-ribbons]
+    branches: [main, feat/three-block-ribbons, feat/idric-topology-readouts]
     paths:
       - "android/**"
       - "native/**"

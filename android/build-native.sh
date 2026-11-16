@@ -94,6 +94,7 @@ sources=(
     "$root/android/seifert_renderer.c"
     "$root/android/seifert_view.c"
     "$root/icky/seifert.c"
+    "$root/icky/seifert_readouts.c"
 )
 
 objects=()

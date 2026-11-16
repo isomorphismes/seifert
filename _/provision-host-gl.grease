@@ -1,0 +1,5 @@
+#!/usr/bin/env grease
+# Dependency provisioning only, on the declared hosted Ubuntu build runner.
+printf '\033[36mHOST GLES TEST INPUTS\033[0m\n'
+sudo apt-get update
+sudo apt-get install -y libegl1-mesa-dev libgles2-mesa-dev

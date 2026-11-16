@@ -19,6 +19,15 @@ jobs:
         env:
           ICK: ${{ steps.ick.outputs.compiler }}
         run: sh native/test-host.sh
+      - id: grease
+        uses: ./.github/actions/grease
+      - name: Provision host GLES test inputs
+        run: ${{ steps.grease.outputs.executable }} _/provision-host-gl.grease
+      - name: Mathematical readouts and real GLES pixel acceptance
+        env:
+          ICK: ${{ steps.ick.outputs.compiler }}
+          SEIFERT_GL_INCLUDE: /usr/include
+        run: ${{ steps.grease.outputs.executable }} _/check-live-readouts.grease ${{ github.workspace }}
 
   readouts:
     runs-on: ubuntu-24.04
