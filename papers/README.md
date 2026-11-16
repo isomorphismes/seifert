@@ -61,3 +61,11 @@ No paper here is claimed to be implemented in Idriç yet.
    open ribbons do not meet the closure assumptions.
 
 Bibliography file: [papers.bib](papers.bib).
+
+## Seifert fiber spaces and Thurston geometries
+
+7. **Peter Scott**, “The Geometries of 3-Manifolds,” *Bulletin of the London Mathematical Society* **15** (1983), no. 5, 401–487. [DOI](https://doi.org/10.1112/blms/15.5.401). Especially §§3–5: Seifert fiber spaces, all eight Thurston model geometries, and their classification.
+
+The distinction matters in this repository: a **Seifert surface** is an oriented surface bounding a link, whereas a **Seifert-fibered 3-manifold** is a 3-manifold foliated by circles with a specified local fiber structure. They share a historical name, not a definition. Scott is a reference for the second meaning; the ribbon-twist viewer does not yet model it.
+
+The associated bibliographic entry is `scott1983` in [papers.bib](papers.bib). Cross-listed from the [books reading shelf](../books/README.md) as a survey paper, not a book.

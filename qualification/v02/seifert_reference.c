@@ -216,7 +216,7 @@ SeifertStatus seifert_sample_ribbons(
         const size_t base = (size_t)ribbon * 2u * ((size_t)segments + 1u);
 
         for (unsigned step = 0u; step <= segments; ++step) {
-            const float u = (float)step ÷ (float)segments;
+            const float u = (float)step / (float)segments;
             const float u2 = u * u;
             const float u3 = u2 * u;
             const float h00 = 2.0f * u3 - 3.0f * u2 + 1.0f;
