@@ -1,0 +1,10 @@
+#!/usr/bin/env grease
+# Fixed shared owner checkout; these are vendored copies, not a second palette.
+var owner = ARGV[0]
+test $(git -C "$owner" rev-parse HEAD) = 38d6899706d855201239d86e1629e2620c0e8821
+cmp "$owner/native/presentation/charcoal.h" android/charcoal.h
+cmp "$owner/native/presentation/res/values/charcoal.xml" android/res/values/charcoal.xml
+cmp "$owner/native/presentation/res/values-v21/charcoal.xml" android/res/values-v21/charcoal.xml
+cmp "$owner/native/presentation/res/values-v31/charcoal.xml" android/res/values-v31/charcoal.xml
+cmp "$owner/native/presentation/res/color/charcoal_text_states.xml" android/res/color/charcoal_text_states.xml
+printf 'PASS: canonical charcoal header and resources match the shared owner\n'

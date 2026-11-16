@@ -28,6 +28,7 @@ export ANDROID_STORE_PASSWORD=${SEIFERT_STORE_PASSWORD:?SEIFERT_STORE_PASSWORD i
 export ANDROID_KEY_PASSWORD=${SEIFERT_KEY_PASSWORD:?SEIFERT_KEY_PASSWORD is required}
 export ANDROID_EXPECTED_CERT_SHA256=${SEIFERT_EXPECTED_CERT_SHA256:?SEIFERT_EXPECTED_CERT_SHA256 is required}
 export ANDROID_REQUIRE_NO_DEX=1
+export ANDROID_RES_DIR="$root/android/res"
 export ANDROID_SOURCE_COMMIT=${ANDROID_SOURCE_COMMIT:-$(git -C "$root" rev-parse HEAD)}
 
 exec bash "$packager"     "$root/android/AndroidManifest.xml"     "$native_library"     "$abi"     "$output"
